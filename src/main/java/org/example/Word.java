@@ -59,4 +59,7 @@ public class Word {
                 + String.format("%15s", word) + "  " + meaning; //15칸 오른쪽 정렬
         return str;
     }
+    public String toFileString(){
+        return this.level + "|" + this.word + "|" + this.meaning;
+    }
 }

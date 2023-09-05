@@ -28,7 +28,17 @@ public class WordManager {
         while(true){
             int menu = selectMenu();
             if(menu == 0) break;
-            if(menu == 4) {
+            else if(menu == 1) {
+                // show list
+                wordCRUD.listAll();
+            }
+            else if(menu == 2) {
+                wordCRUD.searchLevel();
+            }
+            else if(menu == 3){
+                wordCRUD.searchWord();
+            }
+            else if(menu == 4) {
                 // create
                 wordCRUD.addItem();
             }
@@ -38,10 +48,10 @@ public class WordManager {
             else if(menu == 6) {
                 wordCRUD.deleteItem();
             }
-            else if(menu == 1) {
-                // show list
-                wordCRUD.listAll();
+            else if (menu == 7) {
+                wordCRUD.saveFile();
             }
+
         }
     }
 }
