@@ -15,7 +15,7 @@ public class WordCRUD implements ICRUD{
     public Object add() {
         System.out.print("=> 난이도(1,2,3) & 새 단어 입력 : ");
         int level = s.nextInt();
-        String word = s.nextLine();
+        String word = s.nextLine().trim();
 
         System.out.print("뜻 입력 : ");
         String meaning = s.nextLine();
@@ -25,6 +25,7 @@ public class WordCRUD implements ICRUD{
     public void addItem(){
         Word one = (Word)add();
         list.add(one);
+        System.out.println(one);
         System.out.println("새 단어가 추가되었습니다.");
     }
     @Override
@@ -38,9 +39,7 @@ public class WordCRUD implements ICRUD{
     }
 
     @Override
-    public void selectOne(int id) {
-
-    }
+    public void selectOne(int id) {}
     public void listAll() {
         System.out.println("------------------------------------");
         for(int i=0; i<list.size(); i++){
@@ -56,7 +55,7 @@ public class WordCRUD implements ICRUD{
         for(int i=0; i<list.size(); i++){
             String word = list.get(i).getWord();
             if(!word.contains(keyword)) continue;
-            System.out.print((j+1) + "");
+            System.out.print((j+1) + " ");
             System.out.println(list.get(i).toString());
             idlist.add(i);
             j++;
