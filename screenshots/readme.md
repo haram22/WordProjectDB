@@ -2,7 +2,8 @@
 
 ### 📌 새 단어 추가하기
 <img width="355" src="https://github.com/haram22/WordProject/blob/main/screenshots/output1.png?raw=true">
-<img width="254" alt="스크린샷 2023-09-07 오후 10 39 16" src="https://github.com/haram22/WordProject/assets/97924765/8f237817-9b10-461a-9789-0e5c65367c9c">
+<img width="254" src="https://github.com/haram22/WordProject/blob/main/screenshots/output2.png?raw=true">
 
 ### 📌 모든 단어 목록 보기 & 종료
-<img width="344" alt="스크린샷 2023-09-07 오후 10 39 24" src="https://github.com/haram22/WordProject/assets/97924765/d6cf0005-9914-4958-a1c1-bb1bd39e842e">
+<img width="344" src="https://github.com/haram22/WordProject/blob/main/screenshots/output3.png?raw=true">
+
