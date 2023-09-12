@@ -1,1 +1,8 @@
-3|hello|안녕하세요
+2|hello|안녕하세요
+1|apple|사과
+3|kiwi|키위
+2|name|이름
+1|water|물
+1|pen|펜, 볼펜
+2|air|공기
+3|cloud|구름

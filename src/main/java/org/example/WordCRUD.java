@@ -1,15 +1,40 @@
 package org.example;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 // ICRUD를 구현한 구현체가 WordCRUD
 public class WordCRUD implements ICRUD{
+    final String selectall = "select * from dictionary limit 5";
     ArrayList<Word> list;
     Scanner s;
     final String fname = "Dictionary.txt";
+    Connection conn;
     WordCRUD(Scanner s) {
         list = new ArrayList<>();
         this.s = s;
+        // getConnection 함수 호출
+        conn = DBConnection.getConnection();
+    }
+    // query문을 만들어야 함
+    public void loadData() throws SQLException {
+        list.clear(); // 기존에 있던 리스트 초기화
+
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(selectall);
+        while(true){
+            if(!rs.next()) break; //다음 데이터가 없다면 break
+            int id = rs.getInt("id");
+            int level = rs.getInt("level");
+            String word = rs.getString("word");
+            String meaning = rs.getString("meaning");
+            list.add(new Word(id, level, word, meaning));
+        }
+        rs.close(); // 반복문을 나왔다는 것은 데이터를 모두 로드했다는 뜻이므로 닫아줘도 된다.
+        stmt.close();
     }
     @Override
     public Object add() {
@@ -41,6 +66,11 @@ public class WordCRUD implements ICRUD{
     @Override
     public void selectOne(int id) {}
     public void listAll() {
+        try {
+            loadData();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("------------------------------------");
         for(int i=0; i<list.size(); i++){
             System.out.print((i+1) + " ");
@@ -106,29 +136,29 @@ public class WordCRUD implements ICRUD{
         } else
             System.out.println("취소되었습니다. ");
     }
-    public void loadFile() {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(fname));
-            String line;
-            int count = 0;
-
-            while (true) {
-                line = br.readLine();
-                if (line == null) break;
-                String data[] = line.split("\\|");
-                int level = Integer.parseInt(data[0]);
-                String word = data[1];
-                String meaning = data[2];
-                list.add(new Word(0, level, word, meaning));
-                count++;
-            }
-            br.close();
-            System.out.println("==> " + count + "개 데이터 로딩 완료 !");
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public void loadFile() {
+//        try {
+//            BufferedReader br = new BufferedReader(new FileReader(fname));
+//            String line;
+//            int count = 0;
+//
+//            while (true) {
+//                line = br.readLine();
+//                if (line == null) break;
+//                String data[] = line.split("\\|");
+//                int level = Integer.parseInt(data[0]);
+//                String word = data[1];
+//                String meaning = data[2];
+//                list.add(new Word(0, level, word, meaning));
+//                count++;
+//            }
+//            br.close();
+//            System.out.println("==> " + count + "개 데이터 로딩 완료 !");
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public void saveFile() {
         try {
