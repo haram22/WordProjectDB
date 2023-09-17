@@ -1,14 +1,16 @@
 package org.example;
 import java.io.*;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 // ICRUD를 구현한 구현체가 WordCRUD
 public class WordCRUD implements ICRUD{
-    final String selectall = "select * from dictionary limit 5";
+    final String selectall = "select * from dictionary";
+    // 각 데이터는 순서대로 들어간다.
+    final String WORD_INSERT = "insert into dictionary (level, word, meaning, regdate)" + "values (?,?,?,?) ";
+    final String WORD_UPDATE = "update dictionary set meaning=? where id=? ";
     ArrayList<Word> list;
     Scanner s;
     final String fname = "Dictionary.txt";
@@ -36,8 +38,31 @@ public class WordCRUD implements ICRUD{
         rs.close(); // 반복문을 나왔다는 것은 데이터를 모두 로드했다는 뜻이므로 닫아줘도 된다.
         stmt.close();
     }
+    // 현재 날짜 가져오기
+    public String getCurrentDate(){
+        LocalDate now = LocalDate.now();
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return f.format(now);
+    }
     @Override
-    public Object add() {
+    public int add(Word one) {
+        int retval = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = conn.prepareStatement(WORD_INSERT);
+            pstmt.setInt(1, one.getLevel());
+            pstmt.setString(2, one.getWord());
+            pstmt.setString(3, one.getMeaning());
+            pstmt.setString(4, getCurrentDate());
+            retval = pstmt.executeUpdate();
+            pstmt.close(); // 클래스 종료
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return retval;
+    }
+    public void addItem(){
         System.out.print("=> 난이도(1,2,3) & 새 단어 입력 : ");
         int level = s.nextInt();
         String word = s.nextLine().trim();
@@ -45,26 +70,17 @@ public class WordCRUD implements ICRUD{
         System.out.print("뜻 입력 : ");
         String meaning = s.nextLine();
 
-        return new Word(0, level, word, meaning);
-    }
-    public void addItem(){
-        Word one = (Word)add();
-        list.add(one);
-        System.out.println(one);
-        System.out.println("새 단어가 추가되었습니다.");
-    }
-    @Override
-    public int update(Object obj) {
-        return 0;
+        Word one = new Word(0, level, word, meaning);
+//        list.add(one);
+        int retval = add(one);
+        if (retval > 0) {
+            System.out.println(one);
+            System.out.println("새 단어가 추가되었습니다.");
+        } else {
+            System.out.println("단어 추가 중 에러 발생 ⚠️");
+        }
     }
 
-    @Override
-    public int delete(Object obj) {
-        return 0;
-    }
-
-    @Override
-    public void selectOne(int id) {}
     public void listAll() {
         try {
             loadData();
@@ -184,4 +200,6 @@ public class WordCRUD implements ICRUD{
         String keyword = s.next();
         listAll(keyword);
     }
+
+
 }
